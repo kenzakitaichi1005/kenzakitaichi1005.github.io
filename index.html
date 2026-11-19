@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🤓たいち画像ガチャ</title>
+<style>
+:root{
+  --green:#53fc18; --panel:#1a1d21; --stage:#000; --line:#2b2f36;
+  --txt:#f2f3f5; --sub:#9aa3ad;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:#0c0e10;color:var(--txt);font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#cfe3ff}
+header.top{max-width:1080px;margin:0 auto;padding:14px 16px 4px;display:flex;align-items:center;gap:10px}
+header.top .logo{font-weight:900;font-size:18px}
+header.top .logo b{color:var(--green)}
+.spacer{flex:1}
+.navbtn{background:#1d2126;color:var(--txt);border:1px solid var(--line);border-radius:9px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer}
+.wrap{max-width:1080px;margin:0 auto;padding:8px 16px 40px}
+
+/* ===== Claim window (公式モーダル再現) ===== */
+.claim-card{max-width:560px;margin:14px auto 0;background:#22262a;border-radius:18px;padding:24px 24px 20px;box-shadow:0 24px 60px rgba(0,0,0,.55)}
+.claim-head{display:flex;align-items:center;gap:10px}
+.claim-head .gift{width:22px;height:22px;flex:none}
+.claim-head h1{font-size:20px;font-weight:800;margin:0;letter-spacing:.2px}
+.xbtn{margin-left:auto;width:34px;height:34px;flex:none;border:none;border-radius:9px;background:#26292f;color:#dfe3e8;font-size:16px;cursor:pointer;line-height:1}
+.xbtn:hover{background:#30343b}
+.claim-desc{color:#c3cad2;font-size:14.5px;line-height:1.65;margin:14px 0 16px}
+.claim-desc a{color:#fff;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.stage{position:relative;background:var(--stage);border-radius:12px;height:338px;overflow:hidden}
+.casevid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;background:#000}
+.stage .halo{position:absolute;left:50%;top:52%;width:420px;height:300px;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(83,252,24,.20),rgba(83,252,24,.05) 55%,transparent 72%);opacity:.55;transition:opacity .5s, transform .5s;pointer-events:none}
+.stage.flaring .halo{opacity:1;transform:translate(-50%,-50%) scale(1.18)}
+.casewrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(80%,430px);transition:opacity .25s, transform .25s}
+.casewrap img{width:100%;display:block}
+.casewrap .seamflare{position:absolute;left:2%;right:2%;top:29.5%;height:12px;border-radius:6px;background:linear-gradient(90deg,transparent,#eaffea 18%,#ffffff 50%,#eaffea 82%,transparent);filter:blur(5px);opacity:0;mix-blend-mode:screen;pointer-events:none}
+.stage.flaring .seamflare{opacity:.95;transition:opacity .35s}
+.pix{position:absolute;display:none;background:var(--green);z-index:4;pointer-events:none}
+.stage.flaring .pix{display:block;animation:pixblink .28s steps(1) infinite}
+@keyframes pixblink{0%{opacity:1}50%{opacity:.15}100%{opacity:.85}}
+.pix.p1{left:12%;top:20%;width:14px;height:14px}
+.pix.p2{right:14%;top:26%;width:9px;height:22px;background:#22d3ee;animation-delay:.07s}
+.pix.p3{left:18%;bottom:20%;width:22px;height:9px;animation-delay:.13s}
+.pix.p4{right:11%;bottom:30%;width:12px;height:12px;background:#eaffea;animation-delay:.19s}
+.pix.p5{left:46%;top:10%;width:16px;height:7px;background:#22d3ee;animation-delay:.1s}
+.stage.flaring .casewrap img{animation:glitch .3s steps(1) infinite}
+@keyframes glitch{
+  0%{transform:translate(0,0);filter:drop-shadow(0 0 0 transparent)}
+  20%{transform:translate(-3px,1px);filter:drop-shadow(-4px 0 rgba(34,211,238,.55)) drop-shadow(4px 0 rgba(83,252,24,.55))}
+  40%{transform:translate(3px,-1px);filter:drop-shadow(4px 0 rgba(34,211,238,.4)) drop-shadow(-4px 0 rgba(83,252,24,.4))}
+  60%{transform:translate(-2px,0);filter:none}
+  80%{transform:translate(2px,1px);filter:drop-shadow(-3px 0 rgba(83,252,24,.5))}
+  100%{transform:translate(0,0);filter:none}
+}
+.stage .flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,#eaffea,#53fc18 55%,transparent 78%);opacity:0;pointer-events:none}
+.deco{position:absolute;bottom:12px;display:none;pointer-events:none;z-index:5}
+.stage.spinning .deco,.stage.revealed .deco{display:block}
+.deco.x{left:14px;color:#22d3ee}
+.deco.steps{right:14px}
+.deco.steps i{display:block;height:5px;background:var(--green);margin-top:2px;margin-left:auto}
+.deco.steps i:nth-child(1){width:10px}.deco.steps i:nth-child(2){width:18px}.deco.steps i:nth-child(3){width:26px}
+
+/* roulette */
+.rtrack{position:absolute;left:0;top:0;height:100%;width:100%;display:none}
+.stage.spinning .rtrack{display:block}
+.scard{position:absolute;top:50%;width:118px;height:124px;margin-top:-62px;will-change:transform}
+.shield{clip-path:polygon(14% 0,86% 0,100% 14%,100% 65%,87% 81%,50% 100%,13% 81%,0 65%,0 14%)}
+.scard-f{position:absolute;inset:0}
+.scard-m{position:absolute;inset:3.5px;background:#0b0c0e}
+.scard-l{position:absolute;inset:2px}
+.scard-in{position:absolute;inset:2px;background:#14161a;background-image:radial-gradient(rgba(255,255,255,.055) 1px,transparent 1.4px);background-size:7px 7px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-bottom:10%}
+.scard-in img{width:67%;height:64%;object-fit:contain}
+.scard.win .scard-f{animation:winpulse .6s ease-out}
+@keyframes winpulse{0%{filter:drop-shadow(0 0 4px rgba(255,255,255,.4)) brightness(1)}35%{filter:drop-shadow(0 0 22px rgba(255,255,255,.95)) brightness(1.4)}100%{filter:drop-shadow(0 0 14px rgba(255,255,255,.8)) brightness(1.12)}}
+
+/* reveal */
+.revealbox{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column}
+.stage.revealed .revealbox{display:flex}
+.rglow{position:absolute;left:50%;top:50%;width:410px;height:340px;transform:translate(-50%,-50%);pointer-events:none}
+.rshield{position:relative;width:268px;height:282px;animation:pop .38s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.75);opacity:0}to{transform:scale(1);opacity:1}}
+.rshield-f{position:absolute;inset:0}
+.rshield-mid{position:absolute;inset:4px;background:#050505}
+.rshield-l{position:absolute;inset:2.5px}
+.rshield-in{position:absolute;inset:2.5px;background:#14161a;background-image:radial-gradient(rgba(255,255,255,.055) 1px,transparent 1.4px);background-size:7px 7px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-bottom:12%}
+.rshield-in img{width:84%;height:70%;object-fit:contain;position:relative;z-index:2}
+.rpedestal{position:absolute;left:50%;bottom:11%;transform:translateX(-50%);width:76%;height:26px;border-radius:50%;filter:blur(7px);opacity:.85;z-index:1}
+.rpill{margin-top:16px;font-size:14px;font-weight:900;letter-spacing:1px;padding:5px 16px;border-radius:20px;border:2px solid;background:rgba(0,0,0,.55)}
+.rnew{position:absolute;top:12px;right:-8px;z-index:6;background:var(--green);color:#06130a;font-size:11px;font-weight:900;padding:3px 8px;border-radius:5px;transform:rotate(6deg);box-shadow:0 4px 14px rgba(83,252,24,.45)}
+
+/* squares + odds */
+.squares{display:flex;justify-content:center;gap:6px;margin:16px 0 8px}
+.squares i{width:16px;height:16px;border-radius:4px;display:block}
+.oddsline{text-align:center;color:#79828c;font-size:11.5px;font-weight:700;margin:0 0 14px}
+.oddsline b{font-weight:800}
+.claimbtn{width:100%;height:52px;border:none;border-radius:9px;background:#33801e;color:#06130a;font-size:17px;font-weight:800;cursor:pointer;letter-spacing:.3px}
+.claimbtn:disabled{background:#2e3238;color:#8a8f98;cursor:default}
+.againrow{display:none;gap:10px}
+.againrow.show{display:flex}
+.againrow .claimbtn{flex:1}
+.ghostbtn{flex:1;height:52px;border-radius:9px;background:#26292f;border:1px solid var(--line);color:var(--txt);font-size:15px;font-weight:700;cursor:pointer}
+.claim-meta{text-align:center;color:#79828c;font-size:12.5px;margin-top:12px}
+
+/* sections */
+section{max-width:960px;margin:30px auto 0}
+.sec-title{font-size:15px;font-weight:800;margin:0 0 4px}
+.sec-sub{color:var(--sub);font-size:12.5px;margin:0 0 12px}
+.hrow{display:flex;gap:10px;flex-wrap:wrap}
+.hcell{position:relative;width:46px;height:48px;flex:none}
+.hcell-f{position:absolute;inset:0}
+.hcell-in{position:absolute;inset:2px;background:#14161a;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-bottom:10%}
+.hcell-in img{width:67%;height:64%;object-fit:contain}
+.empty{color:#79828c;font-size:13px}
+.rgroup{margin-top:18px}
+.rgroup h3{font-size:13.5px;margin:0 0 9px;font-weight:800}
+.rgroup h3 span{color:var(--sub);font-weight:600;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:10px}
+.cell{position:relative;aspect-ratio:118/124}
+.cell-f{position:absolute;inset:0}
+.cell-in{position:absolute;inset:4px;background:#101216;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.4px);background-size:7px 7px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-bottom:10%}
+.cell-in img{width:67%;height:64%;object-fit:contain}
+.cell.locked .cell-in img{filter:brightness(0);opacity:.32}
+.cell .dup{position:absolute;top:-5px;right:-3px;z-index:3;background:#26292f;border:1px solid var(--line);color:#fff;font-size:10.5px;font-weight:800;border-radius:20px;padding:1px 6px}
+footer{max-width:960px;margin:36px auto 0;color:#79828c;font-size:12px;display:flex;gap:14px;align-items:center}
+.linklike{background:none;border:none;color:#79828c;text-decoration:underline;cursor:pointer;font-size:12px;padding:0}
+@media (max-width:560px){
+  .claim-card{padding:19px 16px 16px}
+  .stage{height:308px}
+  .claim-head h1{font-size:18px}
+  .rshield{width:232px;height:244px}
+  .rpill{margin-top:10px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo">🤓たいち<b>画像ガチャ</b></div>
+  <div class="spacer"></div>
+  <button class="navbtn" id="colBtn">図鑑</button>
+</header>
+
+<div class="wrap">
+  <div class="claim-card">
+    <div class="claim-head">
+      <svg class="gift" viewBox="0 0 24 24" fill="none"><rect x="3" y="8" width="18" height="4" rx="1" fill="#53fc18"/><path d="M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8" fill="#2fbf71"/><path d="M12 8v13M12 8s-4.5.2-4.5-2.4C7.5 3.4 12 3.6 12 8Zm0 0s4.5.2 4.5-2.4C16.5 3.4 12 3.6 12 8Z" stroke="#53fc18" stroke-width="1.8"/></svg>
+      <h1>Daily Reward</h1>
+      <button class="xbtn" id="stageReset" title="最初に戻る">✕</button>
+    </div>
+    <p class="claim-desc">デイリー報酬を引いて大当たりを狙おう！剣崎たいちのスタンプが当たります。<a id="viewRewards">View Rewards</a></p>
+
+    <div class="stage" id="stage">
+      <video class="casevid" id="idleVideo" src="assets/idle.mp4" poster="assets/case.webp" autoplay muted loop playsinline></video>
+      <video class="casevid" id="openVideo" src="assets/opening.mp4" poster="assets/case.webp" muted playsinline preload="auto" style="display:none"></video>
+      <div class="rtrack" id="rtrack"></div>
+      <div class="revealbox" id="revealBox">
+        <div class="rglow" id="revealGlow"></div>
+        <div class="rshield">
+          <div class="rshield-f shield" id="rFrame">
+            <div class="rshield-mid shield">
+              <div class="rshield-l shield" id="rFrameL">
+                <div class="rshield-in shield">
+                  <div class="rpedestal" id="rPedestal"></div>
+                  <img id="winImg" alt="">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="rnew" id="rNew" style="display:none">NEW!</div>
+        </div>
+        <div class="rpill" id="rPill">コモン</div>
+      </div>
+      <svg class="deco x" width="18" height="18" viewBox="0 0 18 18"><path d="M2 2 L16 16 M16 2 L2 16" stroke="currentColor" stroke-width="3.4"/></svg>
+      <div class="deco steps"><i></i><i></i><i></i></div>
+      <div class="flash" id="flash"></div>
+    </div>
+
+    <div class="squares">
+      <i style="background:linear-gradient(135deg,#ffffff,#b8f1ff 30%,#ffd7f2 60%,#fff3b0)"></i>
+      <i style="background:#edaa16"></i>
+      <i style="background:#ed3147"></i>
+      <i style="background:#0fc3db"></i>
+      <i style="background:#2ed74a"></i>
+      <i style="background:#9f9f9f"></i>
+    </div>
+    <p class="oddsline"><b style="color:#f2f2f5">ミシック 0.5%</b> ・ <b style="color:#edaa16">レジェンダリー 2%</b> ・ <b style="color:#ed3147">エピック 7.5%</b> ・ <b style="color:#0fc3db">レア 15%</b> ・ <b style="color:#2ed74a">アンコモン 25%</b> ・ <b style="color:#9f9f9f">コモン 50%</b></p>
+
+    <button class="claimbtn" id="claimBtn">Claim</button>
+    <div class="againrow" id="againRow">
+      <button class="claimbtn" id="againBtn">もう一度引く</button>
+      <button class="ghostbtn" id="toColBtn">図鑑を見る</button>
+    </div>
+    <div class="claim-meta">何回でも引けます ・ 累計 <span id="pullsTxt">0</span> 回</div>
+  </div>
+
+  <section id="historySec">
+    <h2 class="sec-title">最近の結果</h2>
+    <p class="sec-sub">直近14回分を表示します</p>
+    <div class="hrow" id="historyRow"></div>
+  </section>
+
+  <section id="collection">
+    <h2 class="sec-title">コレクション <span id="colSummary" style="color:var(--sub);font-size:13px"></span></h2>
+    <p class="sec-sub">当たったスタンプが盾フレームで並びます。未所持はシルエット表示です</p>
+    <div id="colGroups"></div>
+  </section>
+
+  <footer>
+    <span>剣崎たいち スタンプガチャ（ファンメイド再現）</span>
+    <div class="spacer"></div>
+    <button class="linklike" id="resetBtn">データをリセット</button>
+  </footer>
+</div>
+
+<script src="assets/items.js"></script>
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const MYTHIC_BG = 'linear-gradient(135deg,#ffffff,#a8e6ff 28%,#ffc7ec 55%,#fff3b0 80%,#ffffff)';
+const RARITY = {
+  'コモン':      { color:'#9f9f9f', bg:'linear-gradient(180deg,#8a8a8a,#9f9f9f 55%,#c9c9c9)', en:'COMMON' },
+  'アンコモン':  { color:'#2ed74a', bg:'linear-gradient(180deg,#25bd3e,#2ed74a 55%,#7bf79a)', en:'UNCOMMON' },
+  'レア':        { color:'#0fc3db', bg:'linear-gradient(180deg,#0aa8c7,#0fc3db 55%,#5fe3ff)', en:'RARE' },
+  'エピック':    { color:'#ed3147', bg:'linear-gradient(180deg,#e0113c,#ed3147 55%,#ff7a95)', en:'EPIC' },
+  'レジェンダリー': { color:'#edaa16', bg:'linear-gradient(180deg,#e09c0f,#edaa16 55%,#ffd23e)', en:'LEGENDARY' },
+  'ミシック':    { color:'#f2f2f5', bg:MYTHIC_BG, en:'MYTHIC' },
+};
+const ORDER = ['ミシック','レジェンダリー','エピック','レア','アンコモン','コモン'];
+const KEY = 'taichi_gacha_v1';
+function load(){ try { return Object.assign({collection:{}, history:[], pulls:0}, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch(e){ return {collection:{}, history:[], pulls:0}; } }
+let S = load();
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} };
+const TOTAL_W = STAMPS.reduce((a,s)=>a+s.w,0);
+function draw(){
+  let r = Math.random() * TOTAL_W;
+  for (let i=0;i<STAMPS.length;i++){ r -= STAMPS[i].w; if (r <= 0) return i; }
+  return STAMPS.length - 1;
+}
+
+/* ---------- render ---------- */
+function renderMeta(){ $('pullsTxt').textContent = S.pulls; }
+function renderHistory(){
+  const row = $('historyRow');
+  if (!S.history.length){ row.innerHTML = '<span class="empty">まだ引いていません</span>'; return; }
+  row.innerHTML = S.history.slice(0,14).map(i=>{
+    const it = STAMPS[i];
+    return '<div class="hcell"><div class="hcell-f shield" style="background:' + RARITY[it.r].bg + '"><div class="hcell-in shield"><img loading="lazy" src="assets/' + it.f + '" alt=""></div></div></div>';
+  }).join('');
+}
+function renderCollection(){
+  const owned = Object.keys(S.collection).length;
+  $('colSummary').textContent = '— ' + owned + ' of ' + STAMPS.length + ' Unlocked';
+  $('colGroups').innerHTML = ORDER.map(r=>{
+    const items = STAMPS.map((s,i)=>({s,i})).filter(x=>x.s.r===r);
+    const got = items.filter(x=>S.collection[x.i]).length;
+    const cells = items.map(({s,i})=>{
+      const c = S.collection[i];
+      if (c) return '<div class="cell"><div class="cell-f shield" style="background:' + RARITY[r].bg + '"><div class="cell-in shield"><img loading="lazy" src="assets/' + s.f + '" alt=""></div></div>' + (c>1 ? '<span class="dup">×' + c + '</span>' : '') + '</div>';
+      return '<div class="cell locked"><div class="cell-f shield" style="background:#2b2e35"><div class="cell-in shield"><img loading="lazy" src="assets/' + s.f + '" alt=""></div></div></div>';
+    }).join('');
+    return '<div class="rgroup"><h3 style="color:' + RARITY[r].color + '">' + r + ' <span>— ' + got + ' of ' + items.length + ' Unlocked</span></h3><div class="grid">' + cells + '</div></div>';
+  }).join('');
+}
+function renderAll(){ renderMeta(); renderHistory(); renderCollection(); }
+
+/* ---------- flow ---------- */
+let busy = false;
+const stage = $('stage');
+function setClaimEnabled(on){ $('claimBtn').disabled = !on; }
+function resetStage(){
+  if (busy) return;
+  stage.classList.remove('spinning','revealed');
+  const ov = $('openVideo');
+  try { ov.pause(); } catch(e){}
+  ov.style.display = 'none';
+  $('idleVideo').style.display = 'block';
+  $('againRow').classList.remove('show'); $('claimBtn').style.display = '';
+  setClaimEnabled(true);
+}
+let openTimer = null;
+function startPull(){
+  if (busy) return;
+  busy = true;
+  stage.classList.remove('revealed','spinning');
+  $('againRow').classList.remove('show'); $('claimBtn').style.display = '';
+  setClaimEnabled(false);
+  const winIdx = draw();
+  const ov = $('openVideo'), iv = $('idleVideo');
+  let advanced = false;
+  const advance = () => {
+    if (advanced) return; advanced = true;
+    clearTimeout(openTimer);
+    ov.removeEventListener('ended', advance);
+    const fl = $('flash');
+    fl.style.transition = 'none'; fl.style.opacity = .85;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ fl.style.transition = 'opacity .45s'; fl.style.opacity = 0; }));
+    ov.style.display = 'none'; iv.style.display = 'none';
+    setTimeout(()=>toRoulette(winIdx), 120);
+  };
+  iv.style.display = 'none';
+  ov.style.display = 'block';
+  try { ov.currentTime = 0; const p = ov.play(); if (p && p.catch) p.catch(()=>{}); } catch(e){}
+  ov.addEventListener('ended', advance);
+  openTimer = setTimeout(advance, 5800);
+}
+
+const COUNT = 46, WIN_POS = 38, CW = 126, CARD_W = 118;
+function buildCards(winIdx){
+  const track = $('rtrack'); track.innerHTML = '';
+  /* 偏り防止：ルーレット内では同じスタンプを一切重複させない（当選分も含めて全46枚が一意） */
+  const pool = STAMPS.map((_,i)=>i).filter(i=>i!==winIdx);
+  for (let i=pool.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); const t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+  const picks = pool.slice(0, COUNT-1);
+  picks.splice(WIN_POS, 0, winIdx);
+  const cards = [];
+  for (let k=0;k<COUNT;k++){
+    const idx = picks[k];
+    const it = STAMPS[idx];
+    const el = document.createElement('div');
+    el.className = 'scard';
+    el.style.left = (k * CW) + 'px';
+    el.innerHTML = '<div class="scard-f shield" style="background:' + RARITY[it.r].bg + '"><div class="scard-m shield"><div class="scard-l shield" style="background:' + RARITY[it.r].bg + '"><div class="scard-in shield"><img src="assets/' + it.f + '" alt=""></div></div></div></div>';
+    track.appendChild(el); cards.push(el);
+  }
+  return cards;
+}
+function toRoulette(winIdx){
+  stage.classList.add('spinning');
+  const cards = buildCards(winIdx);
+  const W = stage.clientWidth;
+  const startX = W/2 - CARD_W/2;
+  const targetX = W/2 - (WIN_POS * CW + CARD_W/2) + (Math.random()*36 - 18);
+  const DUR = 6600, t0 = performance.now();
+  const track = $('rtrack');
+  function frame(now){
+    const t = Math.min(1, (now - t0) / DUR);
+    const e = 1 - Math.pow(1 - t, 4.2);
+    const x = startX + (targetX - startX) * e;
+    track.style.transform = 'translateX(' + x + 'px)';
+    for (let k=0;k<COUNT;k++){
+      const center = x + k * CW + CARD_W/2;
+      const d = Math.abs(center - W/2) / CW;
+      const prox = Math.max(0, 1 - Math.min(d, 3) / 3);
+      const scale = .68 + .6 * prox;
+      const bright = .42 + .58 * prox;
+      cards[k].style.transform = 'translateY(-50%) scale(' + scale.toFixed(3) + ')';
+      cards[k].style.filter = 'brightness(' + bright.toFixed(3) + ')';
+      cards[k].style.zIndex = String(100 - Math.round(d * 10));
+    }
+    if (t < 1) requestAnimationFrame(frame);
+    else {
+      cards[WIN_POS].classList.add('win');
+      setTimeout(()=>finishReveal(winIdx), 620);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+function finishReveal(winIdx){
+  const it = STAMPS[winIdx], meta = RARITY[it.r];
+  const isNew = !S.collection[winIdx];
+  S.collection[winIdx] = (S.collection[winIdx] || 0) + 1;
+  S.history.unshift(winIdx); S.history = S.history.slice(0, 30);
+  S.pulls += 1; save();
+  $('winImg').src = 'assets/' + it.f;
+  $('rFrame').style.background = meta.bg;
+  $('rFrameL').style.background = meta.bg;
+  const pill = $('rPill');
+  pill.textContent = it.r;
+  pill.style.color = meta.color; pill.style.borderColor = meta.color;
+  $('rPedestal').style.background = 'radial-gradient(closest-side,' + meta.color + ',transparent)';
+  $('revealGlow').style.background = 'radial-gradient(closest-side,' + meta.color + '38,transparent 72%)';
+  $('rNew').style.display = isNew ? 'block' : 'none';
+  stage.classList.remove('spinning'); stage.classList.add('revealed');
+  $('claimBtn').style.display = 'none';
+  $('againRow').classList.add('show');
+  busy = false;
+  renderAll();
+}
+
+$('claimBtn').addEventListener('click', startPull);
+$('againBtn').addEventListener('click', startPull);
+$('stageReset').addEventListener('click', resetStage);
+const goCol = () => $('collection').scrollIntoView({behavior:'smooth'});
+$('colBtn').addEventListener('click', goCol);
+$('toColBtn').addEventListener('click', goCol);
+$('viewRewards').addEventListener('click', goCol);
+let resetArmed = false, resetTimer = null;
+$('resetBtn').addEventListener('click', ()=>{
+  const btn = $('resetBtn');
+  if (!resetArmed){
+    resetArmed = true;
+    btn.textContent = '本当にリセットしますか？ もう一度押すと実行';
+    btn.style.color = '#ff6b81';
+    resetTimer = setTimeout(()=>{ resetArmed = false; btn.textContent = 'データをリセット'; btn.style.color = ''; }, 4000);
+    return;
+  }
+  clearTimeout(resetTimer);
+  localStorage.removeItem(KEY); location.reload();
+});
+renderAll();
+</script>
+</body>
+</html>
