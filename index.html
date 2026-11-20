@@ -130,6 +130,7 @@ footer{max-width:960px;margin:36px auto 0;color:#79828c;font-size:12px;display:f
 .tabs button{flex:1;border:none;background:transparent;color:var(--sub);font-size:14px;font-weight:800;padding:10px 6px;border-radius:8px;cursor:pointer}
 .tabs button[aria-selected="true"]{background:#26292f;color:var(--txt)}
 /* food gacha */
+#modeFood .againrow{margin-top:16px}
 .fstage{background:#101216}
 .fidle{position:absolute;inset:0}
 .fcollage{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
@@ -259,9 +260,7 @@ footer{max-width:960px;margin:36px auto 0;color:#79828c;font-size:12px;display:f
       <h1>今日の夜ご飯は？</h1>
       <button class="xbtn" id="fStageReset" title="最初に戻る">✕</button>
     </div>
-    <p class="claim-desc">剣崎たいちの夜ご飯写真から、今日の夜ご飯を1つ決めます。レアリティはなく、どれも同じ確率です。</p>
-
-    <div class="stage fstage" id="fStage">
+    <div class="stage fstage" id="fStage" style="margin-top:14px">
       <div class="fidle" id="fIdle">
         <div class="fcollage" id="fCollage"></div>
         <div class="fidle-txt">今日の夜ご飯は？</div>
@@ -275,9 +274,7 @@ footer{max-width:960px;margin:36px auto 0;color:#79828c;font-size:12px;display:f
       <div class="flash" id="fFlash"></div>
     </div>
 
-    <p class="oddsline" style="margin-top:16px">全 <b style="color:#f2f2f5" id="fOddsCount">63</b> 種 ・ どれも同じ確率（約1.6%）</p>
-
-    <button class="claimbtn" id="fClaimBtn">夜ご飯を決める</button>
+    <button class="claimbtn" id="fClaimBtn" style="margin-top:16px">夜ご飯を決める</button>
     <div class="againrow" id="fAgainRow">
       <button class="claimbtn" id="fAgainBtn">もう一度引く</button>
       <button class="ghostbtn" id="fToColBtn">図鑑を見る</button>
@@ -512,7 +509,7 @@ function fSetIdleCollage(){
   for (let i=pool.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); const t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
   $('fCollage').innerHTML = pool.slice(0,4).map(i=>'<img src="assets/' + FOODS[i].f + '" alt="">').join('');
 }
-function fRenderMeta(){ $('fPullsTxt').textContent = FS.pulls; $('fOddsCount').textContent = FOODS.length; }
+function fRenderMeta(){ $('fPullsTxt').textContent = FS.pulls; }
 function fRenderHistory(){
   const row = $('fHistoryRow');
   if (!FS.history.length){ row.innerHTML = '<span class="empty">まだ引いていません</span>'; return; }
