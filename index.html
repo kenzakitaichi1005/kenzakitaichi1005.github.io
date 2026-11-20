@@ -125,7 +125,41 @@ section{max-width:960px;margin:30px auto 0}
 .cell .dup{position:absolute;top:-5px;right:-3px;z-index:3;background:#26292f;border:1px solid var(--line);color:#fff;font-size:10.5px;font-weight:800;border-radius:20px;padding:1px 6px}
 footer{max-width:960px;margin:36px auto 0;color:#79828c;font-size:12px;display:flex;gap:14px;align-items:center}
 .linklike{background:none;border:none;color:#79828c;text-decoration:underline;cursor:pointer;font-size:12px;padding:0}
+/* tabs */
+.tabs{display:flex;gap:8px;max-width:560px;margin:10px auto 0;background:#14161a;border:1px solid var(--line);border-radius:12px;padding:5px}
+.tabs button{flex:1;border:none;background:transparent;color:var(--sub);font-size:14px;font-weight:800;padding:10px 6px;border-radius:8px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:#26292f;color:var(--txt)}
+/* food gacha */
+.fstage{background:#101216}
+.fidle{position:absolute;inset:0}
+.fcollage{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.fcollage img{width:100%;height:100%;object-fit:cover;display:block}
+.fidle::after{content:"";position:absolute;inset:0;background:rgba(5,8,6,.45)}
+.fidle-txt{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;font-size:26px;font-weight:900;letter-spacing:1px;background:rgba(0,0,0,.55);padding:10px 22px;border-radius:30px;border:2px solid var(--green);color:#fff;white-space:nowrap}
+.fcard{position:absolute;top:50%;width:168px;height:126px;margin-top:-63px;border-radius:12px;overflow:hidden;will-change:transform;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.fcard img{width:100%;height:100%;object-fit:cover;display:block}
+.fcard.win{outline:3px solid var(--green)}
+.fcard.win img{animation:winpulse .6s ease-out}
+.fstage.spinning .fidle,.fstage.revealed .fidle{display:none}
+.freveal{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:#050505}
+.fstage.revealed .freveal{display:flex}
+.freveal img{max-width:100%;max-height:100%;object-fit:contain;animation:pop .38s cubic-bezier(.2,1.6,.4,1);cursor:pointer}
+.fpill{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-size:15px;font-weight:900;padding:7px 18px;border-radius:20px;background:rgba(0,0,0,.65);border:2px solid var(--green);color:#fff;white-space:nowrap}
+.fnew{position:absolute;top:12px;right:12px;z-index:6;background:var(--green);color:#06130a;font-size:11px;font-weight:900;padding:3px 8px;border-radius:5px;transform:rotate(6deg);box-shadow:0 4px 14px rgba(83,252,24,.45)}
+.fhcell{position:relative;width:62px;height:48px;flex:none;border-radius:8px;overflow:hidden}
+.fhcell img{width:100%;height:100%;object-fit:cover;display:block}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+.fcell{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:#101216}
+.fcell img{width:100%;height:100%;object-fit:cover;display:block}
+.fcell.locked img{filter:brightness(.28) grayscale(.7)}
+.fcell .dup{position:absolute;top:4px;right:4px;z-index:3;background:#26292f;border:1px solid var(--line);color:#fff;font-size:10.5px;font-weight:800;border-radius:20px;padding:1px 6px}
+.fcell.owned{cursor:pointer}
+.lightbox{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:18px;cursor:pointer}
+.lightbox[hidden]{display:none}
+.lightbox img{max-width:100%;max-height:100%;border-radius:12px}
 @media (max-width:560px){
+  .fidle-txt{font-size:21px}
+  .fcard{width:140px;height:105px;margin-top:-52px}
   .claim-card{padding:19px 16px 16px}
   .stage{height:308px}
   .claim-head h1{font-size:18px}
@@ -142,6 +176,11 @@ footer{max-width:960px;margin:36px auto 0;color:#79828c;font-size:12px;display:f
 </header>
 
 <div class="wrap">
+  <div class="tabs" role="tablist">
+    <button id="tabStamp" role="tab" aria-selected="true">🤓 たいち画像ガチャ</button>
+    <button id="tabFood" role="tab" aria-selected="false">🍚 今日の夜ご飯は？</button>
+  </div>
+  <div id="modeStamp">
   <div class="claim-card">
     <div class="claim-head">
       <svg class="gift" viewBox="0 0 24 24" fill="none"><rect x="3" y="8" width="18" height="4" rx="1" fill="#53fc18"/><path d="M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8" fill="#2fbf71"/><path d="M12 8v13M12 8s-4.5.2-4.5-2.4C7.5 3.4 12 3.6 12 8Zm0 0s4.5.2 4.5-2.4C16.5 3.4 12 3.6 12 8Z" stroke="#53fc18" stroke-width="1.8"/></svg>
@@ -211,9 +250,67 @@ footer{max-width:960px;margin:36px auto 0;color:#79828c;font-size:12px;display:f
     <div class="spacer"></div>
     <button class="linklike" id="resetBtn">データをリセット</button>
   </footer>
+  </div><!-- /modeStamp -->
+
+  <div id="modeFood" hidden>
+  <div class="claim-card">
+    <div class="claim-head">
+      <span style="font-size:22px">🍚</span>
+      <h1>今日の夜ご飯は？</h1>
+      <button class="xbtn" id="fStageReset" title="最初に戻る">✕</button>
+    </div>
+    <p class="claim-desc">剣崎たいちの夜ご飯写真から、今日の夜ご飯を1つ決めます。レアリティはなく、どれも同じ確率です。</p>
+
+    <div class="stage fstage" id="fStage">
+      <div class="fidle" id="fIdle">
+        <div class="fcollage" id="fCollage"></div>
+        <div class="fidle-txt">今日の夜ご飯は？</div>
+      </div>
+      <div class="rtrack" id="fTrack"></div>
+      <div class="freveal" id="fReveal">
+        <img id="fWinImg" alt="今日の夜ご飯">
+        <div class="fnew" id="fNew" style="display:none">NEW!</div>
+        <div class="fpill">🍚 今日の夜ご飯はコレ！</div>
+      </div>
+      <div class="flash" id="fFlash"></div>
+    </div>
+
+    <p class="oddsline" style="margin-top:16px">全 <b style="color:#f2f2f5" id="fOddsCount">63</b> 種 ・ どれも同じ確率（約1.6%）</p>
+
+    <button class="claimbtn" id="fClaimBtn">夜ご飯を決める</button>
+    <div class="againrow" id="fAgainRow">
+      <button class="claimbtn" id="fAgainBtn">もう一度引く</button>
+      <button class="ghostbtn" id="fToColBtn">図鑑を見る</button>
+    </div>
+    <div class="claim-meta">何回でも引けます ・ 累計 <span id="fPullsTxt">0</span> 回</div>
+  </div>
+
+  <section>
+    <h2 class="sec-title">最近の結果</h2>
+    <p class="sec-sub">直近14回分を表示します</p>
+    <div class="hrow" id="fHistoryRow"></div>
+  </section>
+
+  <section id="fCollection">
+    <h2 class="sec-title">コレクション <span id="fColSummary" style="color:var(--sub);font-size:13px"></span></h2>
+    <p class="sec-sub">当たった夜ご飯が並びます。未所持は暗く表示です。タップで大きく見れます</p>
+    <div class="fgrid" id="fColGrid"></div>
+  </section>
+
+  <footer>
+    <span>今日の夜ご飯は？（剣崎たいちの夜ご飯写真）</span>
+    <div class="spacer"></div>
+    <button class="linklike" id="fResetBtn">データをリセット</button>
+  </footer>
+  </div><!-- /modeFood -->
+</div>
+
+<div class="lightbox" id="lightbox" hidden>
+  <img id="lightboxImg" alt="">
 </div>
 
 <script src="assets/items.js"></script>
+<script src="assets/food.js"></script>
 <script>
 "use strict";
 const $ = id => document.getElementById(id);
@@ -381,7 +478,7 @@ function finishReveal(winIdx){
 $('claimBtn').addEventListener('click', startPull);
 $('againBtn').addEventListener('click', startPull);
 $('stageReset').addEventListener('click', resetStage);
-const goCol = () => $('collection').scrollIntoView({behavior:'smooth'});
+const goCol = () => (typeof activeTab !== 'undefined' && activeTab === 'food' ? $('fCollection') : $('collection')).scrollIntoView({behavior:'smooth'});
 $('colBtn').addEventListener('click', goCol);
 $('toColBtn').addEventListener('click', goCol);
 $('viewRewards').addEventListener('click', goCol);
@@ -399,6 +496,155 @@ $('resetBtn').addEventListener('click', ()=>{
   localStorage.removeItem(KEY); location.reload();
 });
 renderAll();
+</script>
+<script>
+"use strict";
+/* ===== 今日の夜ご飯は？ ===== */
+const FKEY = 'yorugohan_gacha_v1';
+function fLoad(){ try { return Object.assign({collection:{}, history:[], pulls:0}, JSON.parse(localStorage.getItem(FKEY) || '{}')); } catch(e){ return {collection:{}, history:[], pulls:0}; } }
+let FS = fLoad();
+const fSave = () => { try { localStorage.setItem(FKEY, JSON.stringify(FS)); } catch(e){} };
+const fStage = $('fStage');
+let fBusy = false;
+function fDraw(){ return Math.floor(Math.random() * FOODS.length); }
+function fSetIdleCollage(){
+  const pool = FOODS.map((_,i)=>i);
+  for (let i=pool.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); const t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+  $('fCollage').innerHTML = pool.slice(0,4).map(i=>'<img src="assets/' + FOODS[i].f + '" alt="">').join('');
+}
+function fRenderMeta(){ $('fPullsTxt').textContent = FS.pulls; $('fOddsCount').textContent = FOODS.length; }
+function fRenderHistory(){
+  const row = $('fHistoryRow');
+  if (!FS.history.length){ row.innerHTML = '<span class="empty">まだ引いていません</span>'; return; }
+  row.innerHTML = FS.history.slice(0,14).map(i=>'<div class="fhcell"><img loading="lazy" src="assets/' + FOODS[i].f + '" alt=""></div>').join('');
+}
+function fRenderCollection(){
+  const owned = Object.keys(FS.collection).length;
+  $('fColSummary').textContent = '— ' + owned + ' of ' + FOODS.length + ' Unlocked';
+  $('fColGrid').innerHTML = FOODS.map((fd,i)=>{
+    const c = FS.collection[i];
+    if (c) return '<div class="fcell owned" data-fi="' + i + '"><img loading="lazy" src="assets/' + fd.f + '" alt="">' + (c>1 ? '<span class="dup">×' + c + '</span>' : '') + '</div>';
+    return '<div class="fcell locked"><img loading="lazy" src="assets/' + fd.f + '" alt=""></div>';
+  }).join('');
+  document.querySelectorAll('#fColGrid .fcell.owned').forEach(el=>{
+    el.addEventListener('click', ()=>{ $('lightboxImg').src = 'assets/' + FOODS[+el.dataset.fi].f; $('lightbox').hidden = false; });
+  });
+}
+function fRenderAll(){ fRenderMeta(); fRenderHistory(); fRenderCollection(); }
+function fResetStage(){
+  if (fBusy) return;
+  fStage.classList.remove('spinning','revealed');
+  $('fAgainRow').classList.remove('show'); $('fClaimBtn').style.display = '';
+  $('fClaimBtn').disabled = false;
+  fSetIdleCollage();
+}
+function fStartPull(){
+  if (fBusy) return;
+  fBusy = true;
+  fStage.classList.remove('revealed','spinning');
+  $('fAgainRow').classList.remove('show'); $('fClaimBtn').style.display = '';
+  $('fClaimBtn').disabled = true;
+  const winIdx = fDraw();
+  const fl = $('fFlash');
+  fl.style.transition = 'none'; fl.style.opacity = .7;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ fl.style.transition = 'opacity .4s'; fl.style.opacity = 0; }));
+  setTimeout(()=>fToRoulette(winIdx), 150);
+}
+const FCOUNT = 40, FWIN = 32, FCW = 180, FCARD_W = 168;
+function fBuildCards(winIdx){
+  const track = $('fTrack'); track.innerHTML = '';
+  const pool = FOODS.map((_,i)=>i).filter(i=>i!==winIdx);
+  for (let i=pool.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); const t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+  const picks = pool.slice(0, FCOUNT-1);
+  picks.splice(FWIN, 0, winIdx);
+  const cards = [];
+  for (let k=0;k<FCOUNT;k++){
+    const fd = FOODS[picks[k]];
+    const el = document.createElement('div');
+    el.className = 'fcard';
+    el.style.left = (k * FCW) + 'px';
+    el.innerHTML = '<img src="assets/' + fd.f + '" alt="">';
+    track.appendChild(el); cards.push(el);
+  }
+  return cards;
+}
+function fToRoulette(winIdx){
+  fStage.classList.add('spinning');
+  const cards = fBuildCards(winIdx);
+  const W = fStage.clientWidth;
+  const startX = W/2 - FCARD_W/2;
+  const targetX = W/2 - (FWIN * FCW + FCARD_W/2) + (Math.random()*40 - 20);
+  const DUR = 5600, t0 = performance.now();
+  const track = $('fTrack');
+  function frame(now){
+    const t = Math.min(1, (now - t0) / DUR);
+    const e = 1 - Math.pow(1 - t, 4.2);
+    const x = startX + (targetX - startX) * e;
+    track.style.transform = 'translateX(' + x + 'px)';
+    for (let k=0;k<FCOUNT;k++){
+      const center = x + k * FCW + FCARD_W/2;
+      const d = Math.abs(center - W/2) / FCW;
+      const prox = Math.max(0, 1 - Math.min(d, 3) / 3);
+      const scale = .7 + .45 * prox;
+      const bright = .45 + .55 * prox;
+      cards[k].style.transform = 'translateY(-50%) scale(' + scale.toFixed(3) + ')';
+      cards[k].style.filter = 'brightness(' + bright.toFixed(3) + ')';
+      cards[k].style.zIndex = String(100 - Math.round(d * 10));
+    }
+    if (t < 1) requestAnimationFrame(frame);
+    else { cards[FWIN].classList.add('win'); setTimeout(()=>fFinishReveal(winIdx), 620); }
+  }
+  requestAnimationFrame(frame);
+}
+function fFinishReveal(winIdx){
+  const isNew = !FS.collection[winIdx];
+  FS.collection[winIdx] = (FS.collection[winIdx] || 0) + 1;
+  FS.history.unshift(winIdx); FS.history = FS.history.slice(0, 30);
+  FS.pulls += 1; fSave();
+  $('fWinImg').src = 'assets/' + FOODS[winIdx].f;
+  $('fNew').style.display = isNew ? 'block' : 'none';
+  fStage.classList.remove('spinning'); fStage.classList.add('revealed');
+  $('fClaimBtn').style.display = 'none';
+  $('fAgainRow').classList.add('show');
+  fBusy = false;
+  fRenderAll();
+}
+$('fClaimBtn').addEventListener('click', fStartPull);
+$('fAgainBtn').addEventListener('click', fStartPull);
+$('fStageReset').addEventListener('click', fResetStage);
+$('fToColBtn').addEventListener('click', ()=>$('fCollection').scrollIntoView({behavior:'smooth'}));
+$('fWinImg').addEventListener('click', ()=>{ $('lightboxImg').src = $('fWinImg').src; $('lightbox').hidden = false; });
+$('lightbox').addEventListener('click', ()=>{ $('lightbox').hidden = true; });
+let fResetArmed = false, fResetTimer = null;
+$('fResetBtn').addEventListener('click', ()=>{
+  const btn = $('fResetBtn');
+  if (!fResetArmed){
+    fResetArmed = true;
+    btn.textContent = '本当にリセットしますか？ もう一度押すと実行';
+    btn.style.color = '#ff6b81';
+    fResetTimer = setTimeout(()=>{ fResetArmed = false; btn.textContent = 'データをリセット'; btn.style.color = ''; }, 4000);
+    return;
+  }
+  clearTimeout(fResetTimer);
+  localStorage.removeItem(FKEY); FS = fLoad(); fResetStage(); fRenderAll();
+  fResetArmed = false; btn.textContent = 'データをリセット'; btn.style.color = '';
+});
+/* tabs */
+let activeTab = 'stamp';
+try { if (localStorage.getItem('gacha_tab') === 'food') activeTab = 'food'; } catch(e){}
+function setTab(t){
+  activeTab = t;
+  $('modeStamp').hidden = t !== 'stamp';
+  $('modeFood').hidden = t !== 'food';
+  $('tabStamp').setAttribute('aria-selected', t === 'stamp' ? 'true' : 'false');
+  $('tabFood').setAttribute('aria-selected', t === 'food' ? 'true' : 'false');
+  try { localStorage.setItem('gacha_tab', t); } catch(e){}
+}
+$('tabStamp').addEventListener('click', ()=>setTab('stamp'));
+$('tabFood').addEventListener('click', ()=>setTab('food'));
+setTab(activeTab);
+fSetIdleCollage();
+fRenderAll();
 </script>
 </body>
 </html>
