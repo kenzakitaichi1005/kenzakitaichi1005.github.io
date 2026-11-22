@@ -5,196 +5,142 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>剣崎たいち 2026年にプレイしたゲーム</title>
 <style>
+  :root { --bg:#0d1117; --card:#161b22; --card2:#1c2128; --line:#30363d; --text:#e6edf3; --muted:#8b949e; --green:#53fc18; --accent:#33801e; }
   * { box-sizing: border-box; }
-  body { margin: 0; background: #17191c; color: #e8eaed; font-family: sans-serif; }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 20px 16px 48px; }
-  h1 { font-size: 20px; margin: 8px 0 4px; }
-  .sub { color: #9aa0a6; font-size: 13px; margin-bottom: 16px; }
-  .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-  .tabs button { flex: 1; padding: 10px; font-size: 15px; border: 1px solid #3a3f45; border-radius: 8px; background: #22262a; color: #e8eaed; cursor: pointer; }
-  .tabs button.active { background: #33801e; border-color: #33801e; color: #fff; font-weight: bold; }
-  ul.games { list-style: none; margin: 0; padding: 0; }
-  ul.games li { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #22262a; border-radius: 8px; margin-bottom: 6px; }
-  ul.games .num { color: #9aa0a6; min-width: 28px; text-align: right; font-size: 13px; }
-  ul.games .name { flex: 1; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "Hiragino Kaku Gothic ProN", system-ui, sans-serif; }
+  .hero { background: linear-gradient(135deg, #14532d 0%, #0d1117 65%); border-bottom: 1px solid var(--line); padding: 30px 16px 22px; }
+  .hero-in { max-width: 860px; margin: 0 auto; }
+  .hero h1 { font-size: 24px; margin: 0 0 6px; line-height: 1.4; }
+  .hero p { color: #c9d1d9; margin: 0 0 16px; font-size: 13px; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: 12px; }
+  .chip b { color: var(--green); }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 6px 16px 48px; }
+  .tabs { position: sticky; top: 0; background: var(--bg); padding: 12px 0; display: flex; gap: 8px; z-index: 5; }
+  .tabs button { flex: 1; padding: 11px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 15px; cursor: pointer; }
+  .tabs button.active { background: var(--accent); border-color: var(--accent); font-weight: bold; }
+  .search { width: 100%; padding: 11px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 15px; margin-bottom: 14px; }
+  .search::placeholder { color: var(--muted); }
+  .genre { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--gc, #8b949e); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
+  .genre h2 { margin: 0 0 10px; font-size: 16px; display: flex; justify-content: space-between; align-items: baseline; }
+  .genre h2 .cnt { color: var(--muted); font-size: 12px; font-weight: normal; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 4px; }
+  @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
+  .item { display: flex; gap: 8px; padding: 6px 8px; border-radius: 6px; background: var(--card2); font-size: 14px; align-items: baseline; }
+  .item .num { color: var(--muted); min-width: 24px; text-align: right; font-size: 12px; }
+  .rank-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 6px; }
+  .badge { width: 30px; height: 30px; border-radius: 50%; background: var(--card2); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; flex: none; }
+  .badge.g1 { background: #edaa16; color: #111; border-color: #edaa16; }
+  .badge.g2 { background: #c0c6cc; color: #111; border-color: #c0c6cc; }
+  .badge.g3 { background: #d08a4e; color: #111; border-color: #d08a4e; }
+  .rank-main { flex: 1; min-width: 0; }
+  .rank-name { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar { height: 6px; background: var(--card2); border-radius: 3px; margin-top: 4px; }
+  .bar i { display: block; height: 100%; background: var(--green); border-radius: 3px; }
+  .rank-h { color: var(--muted); font-size: 13px; white-space: nowrap; }
+  h2.sec { font-size: 16px; margin: 24px 0 10px; }
   table { width: 100%; border-collapse: collapse; }
-  table td { padding: 9px 12px; background: #22262a; border-bottom: 4px solid #17191c; }
+  table td { padding: 8px 12px; background: var(--card); border-bottom: 4px solid var(--bg); font-size: 14px; }
   table td.r { color: #edaa16; font-weight: bold; width: 56px; white-space: nowrap; }
-  table td.h { text-align: right; white-space: nowrap; color: #9aa0a6; }
-  h2 { font-size: 16px; margin: 24px 0 10px; }
-  .note { color: #f0b429; font-size: 13px; margin-top: 20px; }
+  table td.h { text-align: right; white-space: nowrap; color: var(--muted); }
+  .note { background: #2a2118; border: 1px solid #6e5622; color: #f0b429; border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.9; margin-top: 24px; }
   .hidden { display: none; }
 </style>
 </head>
 <body>
+<header class="hero">
+  <div class="hero-in">
+    <h1>剣崎たいち 2026年にプレイしたゲーム</h1>
+    <p>2026年1月〜11月23日時点の集計</p>
+    <div class="chips">
+      <span class="chip">全<b>70</b>タイトル</span>
+      <span class="chip">Twitch プレイ時間 <b>1009</b>時間</span>
+      <span class="chip">Kick 配信 <b>28</b>回</span>
+      <span class="chip">最多プレイ <b>ELDEN RING</b> 155時間</span>
+    </div>
+  </div>
+</header>
 <div class="wrap">
-  <h1>剣崎たいち 2026年にプレイしたゲーム</h1>
-  <div class="sub">全70タイトル（2026年11月23日時点）</div>
   <div class="tabs">
     <button id="tab-list" class="active" onclick="showTab('list')">一覧</button>
     <button id="tab-ranking" onclick="showTab('ranking')">プレイ時間ランキング</button>
   </div>
   <div id="panel-list">
-<h2>アクション（17）</h2>
-<ul class="games">
-<li><span class="num">1</span><span class="name">カービィのエアライダー</span></li>
-<li><span class="num">2</span><span class="name">スーパーマリオ 3Dワールド フューリーワールド</span></li>
-<li><span class="num">3</span><span class="name">スーパーマリオギャラクシー</span></li>
-<li><span class="num">4</span><span class="name">スーパーマリオギャラクシー2</span></li>
-<li><span class="num">5</span><span class="name">スーパーマリオメーカー2</span></li>
-<li><span class="num">6</span><span class="name">ゼルダの伝説 ティアーズ オブ ザ キングダム</span></li>
-<li><span class="num">7</span><span class="name">ゼルダの伝説 時のオカリナ</span></li>
-<li><span class="num">8</span><span class="name">大乱闘スマッシュブラザーズ SPECIAL</span></li>
-<li><span class="num">9</span><span class="name">マリオカート ワールド</span></li>
-<li><span class="num">10</span><span class="name">モンスターハンターライズ</span></li>
-<li><span class="num">11</span><span class="name">Getting Over It</span></li>
-<li><span class="num">12</span><span class="name">Jump King</span></li>
-<li><span class="num">13</span><span class="name">Pogo</span></li>
-<li><span class="num">14</span><span class="name">Pogostuck</span></li>
-<li><span class="num">15</span><span class="name">PRAGMATA</span></li>
-<li><span class="num">16</span><span class="name">ROB RUN</span></li>
-<li><span class="num">17</span><span class="name">SEKIRO</span></li>
-</ul>
-<h2>RPG（13）</h2>
-<ul class="games">
-<li><span class="num">18</span><span class="name">原神</span></li>
-<li><span class="num">19</span><span class="name">ポケットモンスター ファイアレッド リーフグリーン</span></li>
-<li><span class="num">20</span><span class="name">ポケットモンスター 赤 緑</span></li>
-<li><span class="num">21</span><span class="name">マブラヴ ガールズガーデン</span></li>
-<li><span class="num">22</span><span class="name">妖怪ウォッチ</span></li>
-<li><span class="num">23</span><span class="name">Cyberpunk 2077</span></li>
-<li><span class="num">24</span><span class="name">Dark Souls</span></li>
-<li><span class="num">25</span><span class="name">Dark Souls Remastered</span></li>
-<li><span class="num">26</span><span class="name">ELDEN RING</span></li>
-<li><span class="num">27</span><span class="name">FINAL FANTASY X</span></li>
-<li><span class="num">28</span><span class="name">Pokémon Champions</span></li>
-<li><span class="num">29</span><span class="name">Tales of Arise</span></li>
-<li><span class="num">30</span><span class="name">UNDERTALE</span></li>
-</ul>
-<h2>ホラー（9）</h2>
-<ul class="games">
-<li><span class="num">31</span><span class="name">バイオハザード RE2</span></li>
-<li><span class="num">32</span><span class="name">バイオハザード ヴィレッジ</span></li>
-<li><span class="num">33</span><span class="name">バイオハザード7</span></li>
-<li><span class="num">34</span><span class="name">Dead by Daylight</span></li>
-<li><span class="num">35</span><span class="name">Five Nights at Freddy&#x27;s</span></li>
-<li><span class="num">36</span><span class="name">Ib</span></li>
-<li><span class="num">37</span><span class="name">Layers of Fear</span></li>
-<li><span class="num">38</span><span class="name">SILENT HILL f</span></li>
-<li><span class="num">39</span><span class="name">The Quarry</span></li>
-</ul>
-<h2>シミュレーション（7）</h2>
-<ul class="games">
-<li><span class="num">40</span><span class="name">アイドルマスター スターリットシーズン</span></li>
-<li><span class="num">41</span><span class="name">妹に運転を教える</span></li>
-<li><span class="num">42</span><span class="name">学園アイドルマスター</span></li>
-<li><span class="num">43</span><span class="name">トモダチコレクション</span></li>
-<li><span class="num">44</span><span class="name">トモダチコレクション わくわく生活</span></li>
-<li><span class="num">45</span><span class="name">American Truck Simulator</span></li>
-<li><span class="num">46</span><span class="name">Euro Truck Simulator 2</span></li>
-</ul>
-<h2>シューティング（6）</h2>
-<ul class="games">
-<li><span class="num">47</span><span class="name">Apex Legends</span></li>
-<li><span class="num">48</span><span class="name">Fortnite</span></li>
-<li><span class="num">49</span><span class="name">Overwatch</span></li>
-<li><span class="num">50</span><span class="name">PUBG</span></li>
-<li><span class="num">51</span><span class="name">Titanfall 2</span></li>
-<li><span class="num">52</span><span class="name">Totally Accurate Battlegrounds</span></li>
-</ul>
-<h2>カジュアル・パーティ（10）</h2>
-<ul class="games">
-<li><span class="num">53</span><span class="name">スーパーリアル麻雀</span></li>
-<li><span class="num">54</span><span class="name">1/8192</span></li>
-<li><span class="num">55</span><span class="name">Astral Party</span></li>
-<li><span class="num">56</span><span class="name">Doodle Dice Monsters</span></li>
-<li><span class="num">57</span><span class="name">Fall Guys</span></li>
-<li><span class="num">58</span><span class="name">Gartic Phone</span></li>
-<li><span class="num">59</span><span class="name">hololive Dreams</span></li>
-<li><span class="num">60</span><span class="name">MECCHA CHAMELEON</span></li>
-<li><span class="num">61</span><span class="name">Tiling Town</span></li>
-<li><span class="num">62</span><span class="name">ZAKO NO AHIRU</span></li>
-</ul>
-<h2>その他（8）</h2>
-<ul class="games">
-<li><span class="num">63</span><span class="name">ダンガンロンパ2</span></li>
-<li><span class="num">64</span><span class="name">みんなでtier表</span></li>
-<li><span class="num">65</span><span class="name">and Roger</span></li>
-<li><span class="num">66</span><span class="name">Breathedge</span></li>
-<li><span class="num">67</span><span class="name">Heavy Rain</span></li>
-<li><span class="num">68</span><span class="name">Minecraft</span></li>
-<li><span class="num">69</span><span class="name">Shadowverse Worlds Beyond</span></li>
-<li><span class="num">70</span><span class="name">Slay the Spire</span></li>
-</ul>
+    <input class="search" type="search" placeholder="タイトルで検索" oninput="filterList(this.value)">
+<section class="genre" style="--gc:#f85149"><h2>アクション<span class="cnt">17タイトル</span></h2><div class="grid"><div class="item"><span class="num">1</span><span>カービィのエアライダー</span></div><div class="item"><span class="num">2</span><span>スーパーマリオ 3Dワールド フューリーワールド</span></div><div class="item"><span class="num">3</span><span>スーパーマリオギャラクシー</span></div><div class="item"><span class="num">4</span><span>スーパーマリオギャラクシー2</span></div><div class="item"><span class="num">5</span><span>スーパーマリオメーカー2</span></div><div class="item"><span class="num">6</span><span>ゼルダの伝説 ティアーズ オブ ザ キングダム</span></div><div class="item"><span class="num">7</span><span>ゼルダの伝説 時のオカリナ</span></div><div class="item"><span class="num">8</span><span>大乱闘スマッシュブラザーズ SPECIAL</span></div><div class="item"><span class="num">9</span><span>マリオカート ワールド</span></div><div class="item"><span class="num">10</span><span>モンスターハンターライズ</span></div><div class="item"><span class="num">11</span><span>Getting Over It</span></div><div class="item"><span class="num">12</span><span>Jump King</span></div><div class="item"><span class="num">13</span><span>Pogo</span></div><div class="item"><span class="num">14</span><span>Pogostuck</span></div><div class="item"><span class="num">15</span><span>PRAGMATA</span></div><div class="item"><span class="num">16</span><span>ROB RUN</span></div><div class="item"><span class="num">17</span><span>SEKIRO</span></div></div></section>
+<section class="genre" style="--gc:#a371f7"><h2>RPG<span class="cnt">13タイトル</span></h2><div class="grid"><div class="item"><span class="num">18</span><span>原神</span></div><div class="item"><span class="num">19</span><span>ポケットモンスター ファイアレッド リーフグリーン</span></div><div class="item"><span class="num">20</span><span>ポケットモンスター 赤 緑</span></div><div class="item"><span class="num">21</span><span>マブラヴ ガールズガーデン</span></div><div class="item"><span class="num">22</span><span>妖怪ウォッチ</span></div><div class="item"><span class="num">23</span><span>Cyberpunk 2077</span></div><div class="item"><span class="num">24</span><span>Dark Souls</span></div><div class="item"><span class="num">25</span><span>Dark Souls Remastered</span></div><div class="item"><span class="num">26</span><span>ELDEN RING</span></div><div class="item"><span class="num">27</span><span>FINAL FANTASY X</span></div><div class="item"><span class="num">28</span><span>Pokémon Champions</span></div><div class="item"><span class="num">29</span><span>Tales of Arise</span></div><div class="item"><span class="num">30</span><span>UNDERTALE</span></div></div></section>
+<section class="genre" style="--gc:#ffa657"><h2>ホラー<span class="cnt">9タイトル</span></h2><div class="grid"><div class="item"><span class="num">31</span><span>バイオハザード RE2</span></div><div class="item"><span class="num">32</span><span>バイオハザード ヴィレッジ</span></div><div class="item"><span class="num">33</span><span>バイオハザード7</span></div><div class="item"><span class="num">34</span><span>Dead by Daylight</span></div><div class="item"><span class="num">35</span><span>Five Nights at Freddy&#x27;s</span></div><div class="item"><span class="num">36</span><span>Ib</span></div><div class="item"><span class="num">37</span><span>Layers of Fear</span></div><div class="item"><span class="num">38</span><span>SILENT HILL f</span></div><div class="item"><span class="num">39</span><span>The Quarry</span></div></div></section>
+<section class="genre" style="--gc:#79c0ff"><h2>シミュレーション<span class="cnt">7タイトル</span></h2><div class="grid"><div class="item"><span class="num">40</span><span>アイドルマスター スターリットシーズン</span></div><div class="item"><span class="num">41</span><span>妹に運転を教える</span></div><div class="item"><span class="num">42</span><span>学園アイドルマスター</span></div><div class="item"><span class="num">43</span><span>トモダチコレクション</span></div><div class="item"><span class="num">44</span><span>トモダチコレクション わくわく生活</span></div><div class="item"><span class="num">45</span><span>American Truck Simulator</span></div><div class="item"><span class="num">46</span><span>Euro Truck Simulator 2</span></div></div></section>
+<section class="genre" style="--gc:#56d364"><h2>シューティング<span class="cnt">6タイトル</span></h2><div class="grid"><div class="item"><span class="num">47</span><span>Apex Legends</span></div><div class="item"><span class="num">48</span><span>Fortnite</span></div><div class="item"><span class="num">49</span><span>Overwatch</span></div><div class="item"><span class="num">50</span><span>PUBG</span></div><div class="item"><span class="num">51</span><span>Titanfall 2</span></div><div class="item"><span class="num">52</span><span>Totally Accurate Battlegrounds</span></div></div></section>
+<section class="genre" style="--gc:#f778ba"><h2>カジュアル・パーティ<span class="cnt">10タイトル</span></h2><div class="grid"><div class="item"><span class="num">53</span><span>スーパーリアル麻雀</span></div><div class="item"><span class="num">54</span><span>1/8192</span></div><div class="item"><span class="num">55</span><span>Astral Party</span></div><div class="item"><span class="num">56</span><span>Doodle Dice Monsters</span></div><div class="item"><span class="num">57</span><span>Fall Guys</span></div><div class="item"><span class="num">58</span><span>Gartic Phone</span></div><div class="item"><span class="num">59</span><span>hololive Dreams</span></div><div class="item"><span class="num">60</span><span>MECCHA CHAMELEON</span></div><div class="item"><span class="num">61</span><span>Tiling Town</span></div><div class="item"><span class="num">62</span><span>ZAKO NO AHIRU</span></div></div></section>
+<section class="genre" style="--gc:#8b949e"><h2>その他<span class="cnt">8タイトル</span></h2><div class="grid"><div class="item"><span class="num">63</span><span>ダンガンロンパ2</span></div><div class="item"><span class="num">64</span><span>みんなでtier表</span></div><div class="item"><span class="num">65</span><span>and Roger</span></div><div class="item"><span class="num">66</span><span>Breathedge</span></div><div class="item"><span class="num">67</span><span>Heavy Rain</span></div><div class="item"><span class="num">68</span><span>Minecraft</span></div><div class="item"><span class="num">69</span><span>Shadowverse Worlds Beyond</span></div><div class="item"><span class="num">70</span><span>Slay the Spire</span></div></div></section>
   </div>
   <div id="panel-ranking" class="hidden">
-    <h2>Twitch プレイ時間ランキング</h2>
-    <table>
-<tr><td class="r">1位</td><td>ELDEN RING</td><td class="h">155時間</td></tr>
-<tr><td class="r">2位</td><td>ゼルダの伝説 ティアーズ オブ ザ キングダム</td><td class="h">77時間</td></tr>
-<tr><td class="r">3位</td><td>モンスターハンターライズ</td><td class="h">63時間</td></tr>
-<tr><td class="r">4位</td><td>SEKIRO</td><td class="h">59時間</td></tr>
-<tr><td class="r">5位</td><td>FINAL FANTASY X</td><td class="h">52時間</td></tr>
-<tr><td class="r">5位</td><td>学園アイドルマスター</td><td class="h">52時間</td></tr>
-<tr><td class="r">7位</td><td>Shadowverse Worlds Beyond</td><td class="h">37時間</td></tr>
-<tr><td class="r">8位</td><td>SILENT HILL f</td><td class="h">33時間</td></tr>
-<tr><td class="r">8位</td><td>ポケットモンスター ファイアレッド リーフグリーン</td><td class="h">33時間</td></tr>
-<tr><td class="r">10位</td><td>スーパーマリオ 3Dワールド フューリーワールド</td><td class="h">32時間</td></tr>
-<tr><td class="r">11位</td><td>ダンガンロンパ2</td><td class="h">30時間</td></tr>
-<tr><td class="r">12位</td><td>Dead by Daylight</td><td class="h">25時間</td></tr>
-<tr><td class="r">12位</td><td>Minecraft</td><td class="h">25時間</td></tr>
-<tr><td class="r">14位</td><td>ゼルダの伝説 時のオカリナ</td><td class="h">23時間</td></tr>
-<tr><td class="r">15位</td><td>UNDERTALE</td><td class="h">22時間</td></tr>
-<tr><td class="r">16位</td><td>Pogostuck</td><td class="h">21時間</td></tr>
-<tr><td class="r">16位</td><td>Tales of Arise</td><td class="h">21時間</td></tr>
-<tr><td class="r">18位</td><td>バイオハザード ヴィレッジ</td><td class="h">18時間</td></tr>
-<tr><td class="r">19位</td><td>Pokémon Champions</td><td class="h">16時間</td></tr>
-<tr><td class="r">20位</td><td>ZAKO NO AHIRU</td><td class="h">15時間</td></tr>
-<tr><td class="r">21位</td><td>カービィのエアライダー</td><td class="h">14時間</td></tr>
-<tr><td class="r">21位</td><td>PRAGMATA</td><td class="h">14時間</td></tr>
-<tr><td class="r">23位</td><td>スーパーマリオギャラクシー2</td><td class="h">13時間</td></tr>
-<tr><td class="r">24位</td><td>Tiling Town</td><td class="h">11時間</td></tr>
-<tr><td class="r">25位</td><td>バイオハザード7</td><td class="h">10時間</td></tr>
-<tr><td class="r">25位</td><td>Breathedge</td><td class="h">10時間</td></tr>
-<tr><td class="r">25位</td><td>トモダチコレクション わくわく生活</td><td class="h">10時間</td></tr>
-<tr><td class="r">28位</td><td>Heavy Rain</td><td class="h">9時間</td></tr>
-<tr><td class="r">28位</td><td>大乱闘スマッシュブラザーズ SPECIAL</td><td class="h">9時間</td></tr>
-<tr><td class="r">28位</td><td>バイオハザード RE2</td><td class="h">9時間</td></tr>
-<tr><td class="r">31位</td><td>Euro Truck Simulator 2</td><td class="h">8時間</td></tr>
-<tr><td class="r">31位</td><td>The Quarry</td><td class="h">8時間</td></tr>
-<tr><td class="r">33位</td><td>1/8192</td><td class="h">6時間</td></tr>
-<tr><td class="r">34位</td><td>マリオカート ワールド</td><td class="h">5時間</td></tr>
-<tr><td class="r">34位</td><td>Fall Guys</td><td class="h">5時間</td></tr>
-<tr><td class="r">36位</td><td>MECCHA CHAMELEON</td><td class="h">4時間</td></tr>
-<tr><td class="r">36位</td><td>アイドルマスター スターリットシーズン</td><td class="h">4時間</td></tr>
-<tr><td class="r">36位</td><td>Ib</td><td class="h">4時間</td></tr>
-<tr><td class="r">36位</td><td>スーパーマリオギャラクシー</td><td class="h">4時間</td></tr>
-<tr><td class="r">40位</td><td>Doodle Dice Monsters</td><td class="h">3時間</td></tr>
-<tr><td class="r">40位</td><td>Overwatch</td><td class="h">3時間</td></tr>
-<tr><td class="r">40位</td><td>Titanfall 2</td><td class="h">3時間</td></tr>
-<tr><td class="r">40位</td><td>hololive Dreams</td><td class="h">3時間</td></tr>
-<tr><td class="r">40位</td><td>Five Nights at Freddy&#x27;s</td><td class="h">3時間</td></tr>
-<tr><td class="r">40位</td><td>Cyberpunk 2077</td><td class="h">3時間</td></tr>
-<tr><td class="r">40位</td><td>Jump King</td><td class="h">3時間</td></tr>
-<tr><td class="r">40位</td><td>Layers of Fear</td><td class="h">3時間</td></tr>
-<tr><td class="r">48位</td><td>Fortnite</td><td class="h">2時間</td></tr>
-<tr><td class="r">48位</td><td>ポケットモンスター 赤 緑</td><td class="h">2時間</td></tr>
-<tr><td class="r">48位</td><td>Slay the Spire</td><td class="h">2時間</td></tr>
-<tr><td class="r">48位</td><td>トモダチコレクション</td><td class="h">2時間</td></tr>
-<tr><td class="r">48位</td><td>and Roger</td><td class="h">2時間</td></tr>
-<tr><td class="r">48位</td><td>スーパーリアル麻雀</td><td class="h">2時間</td></tr>
-<tr><td class="r">48位</td><td>PUBG</td><td class="h">2時間</td></tr>
-<tr><td class="r">55位</td><td>Astral Party</td><td class="h">1時間</td></tr>
-<tr><td class="r">55位</td><td>原神</td><td class="h">1時間</td></tr>
-<tr><td class="r">55位</td><td>Getting Over It</td><td class="h">1時間</td></tr>
-<tr><td class="r">55位</td><td>Apex Legends</td><td class="h">1時間</td></tr>
-<tr><td class="r">55位</td><td>Gartic Phone</td><td class="h">1時間</td></tr>
-<tr><td class="r">60位</td><td>American Truck Simulator</td><td class="h">0時間</td></tr>
-<tr><td class="r">60位</td><td>マブラヴ ガールズガーデン</td><td class="h">0時間</td></tr>
-<tr><td class="r">60位</td><td>Totally Accurate Battlegrounds</td><td class="h">0時間</td></tr>
-<tr><td class="r">60位</td><td>スーパーマリオメーカー2</td><td class="h">0時間</td></tr>
-    </table>
-    <h2>Kick 配信回数ランキング</h2>
+    <h2 class="sec">Twitch プレイ時間ランキング</h2>
+<div class="rank-row"><div class="badge g1">1</div><div class="rank-main"><div class="rank-name">ELDEN RING</div><div class="bar"><i style="width:100%"></i></div></div><div class="rank-h">155時間</div></div>
+<div class="rank-row"><div class="badge g2">2</div><div class="rank-main"><div class="rank-name">ゼルダの伝説 ティアーズ オブ ザ キングダム</div><div class="bar"><i style="width:50%"></i></div></div><div class="rank-h">77時間</div></div>
+<div class="rank-row"><div class="badge g3">3</div><div class="rank-main"><div class="rank-name">モンスターハンターライズ</div><div class="bar"><i style="width:41%"></i></div></div><div class="rank-h">63時間</div></div>
+<div class="rank-row"><div class="badge">4</div><div class="rank-main"><div class="rank-name">SEKIRO</div><div class="bar"><i style="width:38%"></i></div></div><div class="rank-h">59時間</div></div>
+<div class="rank-row"><div class="badge">5</div><div class="rank-main"><div class="rank-name">FINAL FANTASY X</div><div class="bar"><i style="width:34%"></i></div></div><div class="rank-h">52時間</div></div>
+<div class="rank-row"><div class="badge">5</div><div class="rank-main"><div class="rank-name">学園アイドルマスター</div><div class="bar"><i style="width:34%"></i></div></div><div class="rank-h">52時間</div></div>
+<div class="rank-row"><div class="badge">7</div><div class="rank-main"><div class="rank-name">Shadowverse Worlds Beyond</div><div class="bar"><i style="width:24%"></i></div></div><div class="rank-h">37時間</div></div>
+<div class="rank-row"><div class="badge">8</div><div class="rank-main"><div class="rank-name">SILENT HILL f</div><div class="bar"><i style="width:21%"></i></div></div><div class="rank-h">33時間</div></div>
+<div class="rank-row"><div class="badge">8</div><div class="rank-main"><div class="rank-name">ポケットモンスター ファイアレッド リーフグリーン</div><div class="bar"><i style="width:21%"></i></div></div><div class="rank-h">33時間</div></div>
+<div class="rank-row"><div class="badge">10</div><div class="rank-main"><div class="rank-name">スーパーマリオ 3Dワールド フューリーワールド</div><div class="bar"><i style="width:21%"></i></div></div><div class="rank-h">32時間</div></div>
+<div class="rank-row"><div class="badge">11</div><div class="rank-main"><div class="rank-name">ダンガンロンパ2</div><div class="bar"><i style="width:19%"></i></div></div><div class="rank-h">30時間</div></div>
+<div class="rank-row"><div class="badge">12</div><div class="rank-main"><div class="rank-name">Dead by Daylight</div><div class="bar"><i style="width:16%"></i></div></div><div class="rank-h">25時間</div></div>
+<div class="rank-row"><div class="badge">12</div><div class="rank-main"><div class="rank-name">Minecraft</div><div class="bar"><i style="width:16%"></i></div></div><div class="rank-h">25時間</div></div>
+<div class="rank-row"><div class="badge">14</div><div class="rank-main"><div class="rank-name">ゼルダの伝説 時のオカリナ</div><div class="bar"><i style="width:15%"></i></div></div><div class="rank-h">23時間</div></div>
+<div class="rank-row"><div class="badge">15</div><div class="rank-main"><div class="rank-name">UNDERTALE</div><div class="bar"><i style="width:14%"></i></div></div><div class="rank-h">22時間</div></div>
+<div class="rank-row"><div class="badge">16</div><div class="rank-main"><div class="rank-name">Pogostuck</div><div class="bar"><i style="width:14%"></i></div></div><div class="rank-h">21時間</div></div>
+<div class="rank-row"><div class="badge">16</div><div class="rank-main"><div class="rank-name">Tales of Arise</div><div class="bar"><i style="width:14%"></i></div></div><div class="rank-h">21時間</div></div>
+<div class="rank-row"><div class="badge">18</div><div class="rank-main"><div class="rank-name">バイオハザード ヴィレッジ</div><div class="bar"><i style="width:12%"></i></div></div><div class="rank-h">18時間</div></div>
+<div class="rank-row"><div class="badge">19</div><div class="rank-main"><div class="rank-name">Pokémon Champions</div><div class="bar"><i style="width:10%"></i></div></div><div class="rank-h">16時間</div></div>
+<div class="rank-row"><div class="badge">20</div><div class="rank-main"><div class="rank-name">ZAKO NO AHIRU</div><div class="bar"><i style="width:10%"></i></div></div><div class="rank-h">15時間</div></div>
+<div class="rank-row"><div class="badge">21</div><div class="rank-main"><div class="rank-name">カービィのエアライダー</div><div class="bar"><i style="width:9%"></i></div></div><div class="rank-h">14時間</div></div>
+<div class="rank-row"><div class="badge">21</div><div class="rank-main"><div class="rank-name">PRAGMATA</div><div class="bar"><i style="width:9%"></i></div></div><div class="rank-h">14時間</div></div>
+<div class="rank-row"><div class="badge">23</div><div class="rank-main"><div class="rank-name">スーパーマリオギャラクシー2</div><div class="bar"><i style="width:8%"></i></div></div><div class="rank-h">13時間</div></div>
+<div class="rank-row"><div class="badge">24</div><div class="rank-main"><div class="rank-name">Tiling Town</div><div class="bar"><i style="width:7%"></i></div></div><div class="rank-h">11時間</div></div>
+<div class="rank-row"><div class="badge">25</div><div class="rank-main"><div class="rank-name">バイオハザード7</div><div class="bar"><i style="width:6%"></i></div></div><div class="rank-h">10時間</div></div>
+<div class="rank-row"><div class="badge">25</div><div class="rank-main"><div class="rank-name">Breathedge</div><div class="bar"><i style="width:6%"></i></div></div><div class="rank-h">10時間</div></div>
+<div class="rank-row"><div class="badge">25</div><div class="rank-main"><div class="rank-name">トモダチコレクション わくわく生活</div><div class="bar"><i style="width:6%"></i></div></div><div class="rank-h">10時間</div></div>
+<div class="rank-row"><div class="badge">28</div><div class="rank-main"><div class="rank-name">Heavy Rain</div><div class="bar"><i style="width:6%"></i></div></div><div class="rank-h">9時間</div></div>
+<div class="rank-row"><div class="badge">28</div><div class="rank-main"><div class="rank-name">大乱闘スマッシュブラザーズ SPECIAL</div><div class="bar"><i style="width:6%"></i></div></div><div class="rank-h">9時間</div></div>
+<div class="rank-row"><div class="badge">28</div><div class="rank-main"><div class="rank-name">バイオハザード RE2</div><div class="bar"><i style="width:6%"></i></div></div><div class="rank-h">9時間</div></div>
+<div class="rank-row"><div class="badge">31</div><div class="rank-main"><div class="rank-name">Euro Truck Simulator 2</div><div class="bar"><i style="width:5%"></i></div></div><div class="rank-h">8時間</div></div>
+<div class="rank-row"><div class="badge">31</div><div class="rank-main"><div class="rank-name">The Quarry</div><div class="bar"><i style="width:5%"></i></div></div><div class="rank-h">8時間</div></div>
+<div class="rank-row"><div class="badge">33</div><div class="rank-main"><div class="rank-name">1/8192</div><div class="bar"><i style="width:4%"></i></div></div><div class="rank-h">6時間</div></div>
+<div class="rank-row"><div class="badge">34</div><div class="rank-main"><div class="rank-name">マリオカート ワールド</div><div class="bar"><i style="width:3%"></i></div></div><div class="rank-h">5時間</div></div>
+<div class="rank-row"><div class="badge">34</div><div class="rank-main"><div class="rank-name">Fall Guys</div><div class="bar"><i style="width:3%"></i></div></div><div class="rank-h">5時間</div></div>
+<div class="rank-row"><div class="badge">36</div><div class="rank-main"><div class="rank-name">MECCHA CHAMELEON</div><div class="bar"><i style="width:3%"></i></div></div><div class="rank-h">4時間</div></div>
+<div class="rank-row"><div class="badge">36</div><div class="rank-main"><div class="rank-name">アイドルマスター スターリットシーズン</div><div class="bar"><i style="width:3%"></i></div></div><div class="rank-h">4時間</div></div>
+<div class="rank-row"><div class="badge">36</div><div class="rank-main"><div class="rank-name">Ib</div><div class="bar"><i style="width:3%"></i></div></div><div class="rank-h">4時間</div></div>
+<div class="rank-row"><div class="badge">36</div><div class="rank-main"><div class="rank-name">スーパーマリオギャラクシー</div><div class="bar"><i style="width:3%"></i></div></div><div class="rank-h">4時間</div></div>
+<div class="rank-row"><div class="badge">40</div><div class="rank-main"><div class="rank-name">Doodle Dice Monsters</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">3時間</div></div>
+<div class="rank-row"><div class="badge">40</div><div class="rank-main"><div class="rank-name">Overwatch</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">3時間</div></div>
+<div class="rank-row"><div class="badge">40</div><div class="rank-main"><div class="rank-name">Titanfall 2</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">3時間</div></div>
+<div class="rank-row"><div class="badge">40</div><div class="rank-main"><div class="rank-name">hololive Dreams</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">3時間</div></div>
+<div class="rank-row"><div class="badge">40</div><div class="rank-main"><div class="rank-name">Five Nights at Freddy&#x27;s</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">3時間</div></div>
+<div class="rank-row"><div class="badge">40</div><div class="rank-main"><div class="rank-name">Cyberpunk 2077</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">3時間</div></div>
+<div class="rank-row"><div class="badge">40</div><div class="rank-main"><div class="rank-name">Jump King</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">3時間</div></div>
+<div class="rank-row"><div class="badge">40</div><div class="rank-main"><div class="rank-name">Layers of Fear</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">3時間</div></div>
+<div class="rank-row"><div class="badge">48</div><div class="rank-main"><div class="rank-name">Fortnite</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">2時間</div></div>
+<div class="rank-row"><div class="badge">48</div><div class="rank-main"><div class="rank-name">ポケットモンスター 赤 緑</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">2時間</div></div>
+<div class="rank-row"><div class="badge">48</div><div class="rank-main"><div class="rank-name">Slay the Spire</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">2時間</div></div>
+<div class="rank-row"><div class="badge">48</div><div class="rank-main"><div class="rank-name">トモダチコレクション</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">2時間</div></div>
+<div class="rank-row"><div class="badge">48</div><div class="rank-main"><div class="rank-name">and Roger</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">2時間</div></div>
+<div class="rank-row"><div class="badge">48</div><div class="rank-main"><div class="rank-name">スーパーリアル麻雀</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">2時間</div></div>
+<div class="rank-row"><div class="badge">48</div><div class="rank-main"><div class="rank-name">PUBG</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">2時間</div></div>
+<div class="rank-row"><div class="badge">55</div><div class="rank-main"><div class="rank-name">Astral Party</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">1時間</div></div>
+<div class="rank-row"><div class="badge">55</div><div class="rank-main"><div class="rank-name">原神</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">1時間</div></div>
+<div class="rank-row"><div class="badge">55</div><div class="rank-main"><div class="rank-name">Getting Over It</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">1時間</div></div>
+<div class="rank-row"><div class="badge">55</div><div class="rank-main"><div class="rank-name">Apex Legends</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">1時間</div></div>
+<div class="rank-row"><div class="badge">55</div><div class="rank-main"><div class="rank-name">Gartic Phone</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">1時間</div></div>
+<div class="rank-row"><div class="badge">60</div><div class="rank-main"><div class="rank-name">American Truck Simulator</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">0時間</div></div>
+<div class="rank-row"><div class="badge">60</div><div class="rank-main"><div class="rank-name">マブラヴ ガールズガーデン</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">0時間</div></div>
+<div class="rank-row"><div class="badge">60</div><div class="rank-main"><div class="rank-name">Totally Accurate Battlegrounds</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">0時間</div></div>
+<div class="rank-row"><div class="badge">60</div><div class="rank-main"><div class="rank-name">スーパーマリオメーカー2</div><div class="bar"><i style="width:2%"></i></div></div><div class="rank-h">0時間</div></div>
+    <h2 class="sec">Kick 配信回数ランキング</h2>
     <table>
 <tr><td class="r">1位</td><td>Pogo</td><td class="h">8回</td></tr>
 <tr><td class="r">2位</td><td>Elden Ring</td><td class="h">7回</td></tr>
@@ -203,7 +149,7 @@
 <tr><td class="r">5位</td><td>学園アイドルマスター</td><td class="h">2回</td></tr>
 <tr><td class="r">6位</td><td>Dark Souls</td><td class="h">1回</td></tr>
     </table>
-    <h2>おまけ ゲーム以外のカテゴリ（Twitch・2026年11月23日時点）</h2>
+    <h2 class="sec">おまけ ゲーム以外のカテゴリ（Twitch・2026年11月23日時点）</h2>
     <table>
 <tr><td>雑談</td><td class="h">482時間</td></tr>
 <tr><td>お絵描き（Art）</td><td class="h">432時間</td></tr>
@@ -212,7 +158,7 @@
 <tr><td>睡眠配信</td><td class="h">9時間</td></tr>
 <tr><td>カラオケ</td><td class="h">3時間</td></tr>
     </table>
-    <h2>おまけ ゲーム以外のカテゴリ（Kick・2026年11月23日時点）</h2>
+    <h2 class="sec">おまけ ゲーム以外のカテゴリ（Kick・2026年11月23日時点）</h2>
     <table>
 <tr><td>雑談</td><td class="h">5回</td></tr>
 <tr><td>お絵描き（Art）</td><td class="h">3回</td></tr>
@@ -227,6 +173,17 @@
     document.getElementById('panel-ranking').classList.toggle('hidden', t !== 'ranking');
     document.getElementById('tab-list').classList.toggle('active', t === 'list');
     document.getElementById('tab-ranking').classList.toggle('active', t === 'ranking');
+  }
+  function filterList(q) {
+    q = q.trim().toLowerCase();
+    document.querySelectorAll('#panel-list .item').forEach(function (el) {
+      el.style.display = el.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+    });
+    document.querySelectorAll('#panel-list .genre').forEach(function (sec) {
+      var any = false;
+      sec.querySelectorAll('.item').forEach(function (el) { if (el.style.display !== 'none') any = true; });
+      sec.style.display = any ? '' : 'none';
+    });
   }
 </script>
 </body>
